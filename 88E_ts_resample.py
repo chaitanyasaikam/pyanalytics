@@ -35,6 +35,7 @@ pd.date_range('2019-7-11 09:00', periods=8, freq='H')
 #convert to different freq
 #create data frame - weekly freq with some data
 classStrength = np.random.randint(25,60, size=100)
+classStrength
 weekdates = pd.date_range('2019-5-1', periods=100, freq='B')
 weekdates
 attendance = pd.DataFrame({'classStr':classStrength, 'wdates':weekdates})
@@ -49,21 +50,23 @@ attendance.head(10)
 #temporarily creates dates for Sat/ Sun, fill with NA
 
 #del dailyAttendance
-attendance.asfreq('D', method='ffill')
-attendance.head()
+a1=attendance.asfreq('D', method='ffill')
+a1.head()
 daily1 = attendance.asfreq('D', method='bfill')
 daily1.head(10)
 #replace permanently
 daily1.rename(columns= {'classStr':'Dattnd'}, inplace=True)
-
+daily1.head()
 newAttendance2 = pd.concat([attendance, daily1], axis=1)
-newAttendance2.head()
+newAttendance2.head(10)
 
 #a.to_frame().join(b)#with same index
 #resample
 newAttendance2.resample('W').sum()
+newAttendance2.resample('W').mean()
 newAttendance2.resample('M').sum()
-
+newAttendance2.resample('M').mean()
+newAttendance2.resample('Q').sum()
 newAttendance2.classStr
 newAttendance2.Dattnd
 
@@ -72,6 +75,7 @@ newAttendance2.Dattnd
 start, end = '2019-05', '2019-06'
 # Plot daily and weekly resampled time series together
 #run together upto plt.show
+import matplotlib.pyplot as plt
 fig, ax = plt.subplots()
 ax.plot(newAttendance2.loc[start:end, 'Dattnd'], marker='.', linestyle='-', linewidth=0.5, label='Daily')
 ax.plot(newAttendance2.loc[start:end, 'classStr'], marker='o', markersize=8, linestyle='-', label='Weekly Mean Resample')
@@ -84,7 +88,8 @@ plt.show();
 
 #
 newAttendance2['Dattnd'].resample('M').sum()
-newAttendance2['Dattnd'].resample('M').sum(min_count=5)
+newAttendance2['Dattnd'].resample('M').sum(min_count=14) # min_count= min rows for the month: Min classes held in the month
+#max() = command to find the last working day in the dataset
 #min rows=5
 
 #----------
